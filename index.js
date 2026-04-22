@@ -12,8 +12,8 @@ app.use(cors());
 require('./db/database');
 
 // routes
-const locationsRouter = require('./routes/locations');
-app.use('/locations', locationsRouter);
+const petRouter = require('./routes/pets');
+app.use('/pets', petRouter);
 
 // basic health check endpoint
 app.get('/health', (req, res) => {
