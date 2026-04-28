@@ -3,9 +3,9 @@ const router = express.Router();
 const db = require('../db/database');
 
 function getPetByName(name) {
-    const pets = db.prepare('SELECT * FROM pets WHERE name = ?');
+    const pets = db.prepare('SELECT * FROM pets WHERE LOWER(name) = ?');
 
-    return pets.get(name);
+    return pets.get(name.toLowerCase());
 }
 
 router.get('/', (req, res) => {
