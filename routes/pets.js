@@ -79,13 +79,14 @@ router.post('/', (req, res) => {
         // Return the created location with features
         const newLocation = {
             id: petId,
-            features: hours || null,
+            features: features || null,
             descriptors: descriptors || null,
             photos: Array.isArray(photos) ? photos : []
         };
 
         res.status(201).json(newLocation);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Failed to create location' });
     }
 });
