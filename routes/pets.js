@@ -32,8 +32,18 @@ router.get('/:name', (req, res) => {
             return res.status(404).json({error: "Pet not found"});
         }
 
+        // add photos
+        const photos = db.prepare(`
+            SELECT url
+            FROM photos
+            WHERE pet_id = ?
+        `).all(pet.id);
+
+        pet.photos = photos.map(p => p.url);
+
         res.json(pet);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Failed to fetch the pet' });
     }
 });
