@@ -91,4 +91,29 @@ router.post('/', (req, res) => {
     }
 });
 
+router.post('/:name/photos', (req, res) => {
+    const { url } = req.body;
+
+    if (!url) {
+        return res.status(400).json({ error: 'Photo URL is required' });
+    }
+
+    try {
+        const pet = getPetByName(req.params.name);
+
+        if (!pet) {
+            return res.status(404).json({ error: 'Pet not found' });
+        }
+
+        db.prepare(`
+            INSERT INTO photos (pet_id, url)
+            VALUES (?, ?)
+        `).run(pet.id, url);
+
+        res.status(201).json({ message: 'Photo added successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add photo' });
+    }
+});
+
 module.exports = router;
