@@ -11,12 +11,30 @@ function getPetByName(name) {
 router.get('/', (req, res) => {
     try {
         const pets = db.prepare(`
-            SELECT *
+            SELECT pets.*, photos.url 
             FROM pets
-            ORDER BY name
+            LEFT JOIN photos ON pets.id = photos.pet_id
         `).all();
 
-        res.json(pets);
+        const petMap = {};
+
+        for (const pet of pets) {
+            if (!petMap[pet.id]) {
+                petMap[pet.id] = {
+                    id: pet.id,
+                    name: pet.name,
+                    features: pet.features,
+                    descriptors: pet.descriptors,
+                    photos: []
+                };
+            }
+
+            if (pet.url) {
+                petMap[pet.id].photos.push(pet.url);
+            }
+        }
+
+        res.json(Object.values(petMap));
     } catch (error) {
         console.log(error);
 
